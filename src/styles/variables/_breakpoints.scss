@@ -1,0 +1,233 @@
+/* File: src/styles/variables/_breakpoints.scss */
+
+@use "sass:map";
+
+// Breakpoints
+$max-widths: (
+  xxs: 360px,
+  xs: 450px,
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  xxl: 1536px,
+  xxxl: 1920px,
+  xxxxl: 2560px
+);
+
+$xxs: map.get($max-widths, xxs);
+$xs: map.get($max-widths, xs);
+$sm: map.get($max-widths, sm);
+$md: map.get($max-widths, md);
+$lg: map.get($max-widths, lg);
+$xl: map.get($max-widths, xl);
+$xxl: map.get($max-widths, xxl);
+$xxxl: map.get($max-widths, xxxl);
+$xxxxl: map.get($max-widths, xxxxl);
+
+// Container max-widths (correspondant aux breakpoints)
+$breakpoints: (
+  xxs: calc($xxs + 1px),
+  xs: calc($xs + 1px),
+  sm: calc($sm + 1px),
+  md: calc($md + 1px),
+  lg: calc($lg + 1px),
+  xl: calc($xl + 1px),
+  xxl: calc($xxl + 1px),
+  xxxl: calc($xxxl + 1px),
+  xxxxl: calc($xxxxl + 1px),
+);
+
+@mixin min-width($bp) {
+  $value: map.get($breakpoints, $bp);
+
+  @if $value {
+    @media screen and (min-width: calc($value)) {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "⚠️ Breakpoint '#{$breakpoint}' not found in $breakpoints map.";
+  }
+}
+
+@function get-layout-gap($multiple: 1) {
+  // @return (base: (calc(0.75rem * #{$multiple})),
+  //   md: (calc(1rem * #{$multiple})),
+  //   lg: (calc(1.25rem * #{$multiple})),
+  //   xxl: (calc(1.5rem * #{$multiple})));
+
+  @return (base: (calc(1rem * #{$multiple})),
+    md: (calc(1.125rem * #{$multiple})),
+    lg: (calc(1.25rem * #{$multiple})),
+    xxl: (calc(1.5rem * #{$multiple})));
+}
+
+$layout-gap: get-layout-gap();
+
+$spc-xxs-mltpler : 0.15;
+$spc-xs-mltpler : 0.25;
+$spc-sm-mltpler : 0.5;
+$spc-md-mltpler : 0.75;
+$spc-xl-mltpler : 1.25;
+$spc-2xl-mltpler : 1.5;
+$spc-3xl-mltpler : 1.75;
+$spc-4xl-mltpler : 2;
+
+:root {
+  --layout-gap-2xs: calc(#{map.get($layout-gap, base)} * #{$spc-xxs-mltpler});
+  --layout-gap-xs: calc(#{map.get($layout-gap, base)} * #{$spc-xs-mltpler});
+  --layout-gap-sm: calc(#{map.get($layout-gap, base)} * #{$spc-sm-mltpler});
+  --layout-gap-md: calc(#{map.get($layout-gap, base)} * #{$spc-md-mltpler});
+  --layout-gap: #{map.get($layout-gap, base)};
+  --layout-gap-xl: calc(#{map.get($layout-gap, base)} * #{$spc-xl-mltpler});
+  --layout-gap-2xl: calc(#{map.get($layout-gap, base)} * #{$spc-2xl-mltpler});
+  --layout-gap-3xl: calc(#{map.get($layout-gap, base)} * #{$spc-3xl-mltpler});
+  --layout-gap-4xl: calc(#{map.get($layout-gap, base)} * #{$spc-4xl-mltpler});
+  --container-size: #{map.get($max-widths, xxs)};
+}
+
+@include min-width(xxs) {
+  :root {
+    --container-size: #{map.get($max-widths, xxs)};
+  }
+}
+
+@include min-width(xs) {
+  :root {
+    --container-size: #{map.get($max-widths, xxs)};
+  }
+}
+
+@include min-width(sm) {
+  :root {
+    --container-size: #{map.get($max-widths, sm)};
+  }
+}
+
+@include min-width(md) {
+  :root {
+    --container-size: #{map.get($max-widths, md)};
+    --layout-gap-2xs: calc(#{map.get($layout-gap, md)} * #{$spc-xxs-mltpler});
+    --layout-gap-xs: calc(#{map.get($layout-gap, md)} * #{$spc-xs-mltpler});
+    --layout-gap-sm: calc(#{map.get($layout-gap, md)} * #{$spc-sm-mltpler});
+    --layout-gap-md: calc(#{map.get($layout-gap, md)} * #{$spc-md-mltpler});
+    --layout-gap: #{map.get($layout-gap, md)};
+    --layout-gap-xl: calc(#{map.get($layout-gap, md)} * #{$spc-xl-mltpler});
+    --layout-gap-2xl: calc(#{map.get($layout-gap, md)} * #{$spc-2xl-mltpler});
+    --layout-gap-3xl: calc(#{map.get($layout-gap, md)} * #{$spc-3xl-mltpler});
+    --layout-gap-4xl: calc(#{map.get($layout-gap, md)} * #{$spc-4xl-mltpler});
+  }
+}
+
+@include min-width(lg) {
+  :root {
+    --container-size: #{map.get($max-widths, lg)};
+    --layout-gap-2xs: calc(#{map.get($layout-gap, lg)} * #{$spc-xxs-mltpler});
+    --layout-gap-xs: calc(#{map.get($layout-gap, lg)} * #{$spc-xs-mltpler});
+    --layout-gap-sm: calc(#{map.get($layout-gap, lg)} * #{$spc-sm-mltpler});
+    --layout-gap-md: calc(#{map.get($layout-gap, lg)} * #{$spc-md-mltpler});
+    --layout-gap: #{map.get($layout-gap, lg)};
+    --layout-gap-xl: calc(#{map.get($layout-gap, lg)} * #{$spc-xl-mltpler});
+    --layout-gap-2xl: calc(#{map.get($layout-gap, lg)} * #{$spc-2xl-mltpler});
+    --layout-gap-3xl: calc(#{map.get($layout-gap, lg)} * #{$spc-3xl-mltpler});
+    --layout-gap-4xl: calc(#{map.get($layout-gap, lg)} * #{$spc-4xl-mltpler});
+  }
+}
+
+@include min-width(xl) {
+  :root {
+    --container-size: #{map.get($max-widths, xl)};
+  }
+}
+
+@include min-width(xxl) {
+  :root {
+    --container-size: #{map.get($max-widths, xxl)};
+    --layout-gap-2xs: calc(#{map.get($layout-gap, xxl)} * #{$spc-xxs-mltpler});
+    --layout-gap-xs: calc(#{map.get($layout-gap, xxl)} * #{$spc-xs-mltpler});
+    --layout-gap-sm: calc(#{map.get($layout-gap, xxl)} * #{$spc-sm-mltpler});
+    --layout-gap-md: calc(#{map.get($layout-gap, xxl)} * #{$spc-md-mltpler});
+    --layout-gap: #{map.get($layout-gap, xxl)};
+    --layout-gap-xl: calc(#{map.get($layout-gap, xxl)} * #{$spc-xl-mltpler});
+    --layout-gap-2xl: calc(#{map.get($layout-gap, xxl)} * #{$spc-2xl-mltpler});
+    --layout-gap-3xl: calc(#{map.get($layout-gap, xxl)} * #{$spc-3xl-mltpler});
+    --layout-gap-4xl: calc(#{map.get($layout-gap, xxl)} * #{$spc-4xl-mltpler});
+  }
+}
+
+$nav-height: calc(70px + (var(--layout-gap) + (var(--layout-gap) * 0.667)));
+
+@mixin layout-gap($type: padding, $sides: inline, $multiple: 1, $important: false) {
+  $layout-gap-values: get-layout-gap($multiple);
+
+  $side-map: (
+    inline: (-left, -right),
+    vertical: (-top, -bottom),
+    top: (-top),
+    right: (-right),
+    bottom: (-bottom),
+    left: (-left),
+    all: (-top, -right, -bottom, -left)
+  );
+
+$selected-sides: map.get($side-map, $sides);
+
+// Mobile First
+@each $side in $selected-sides {
+  #{$type}#{$side}: map.get($layout-gap-values, base) #{if($important, ' !important', '')};
+}
+
+// Media Queries
+@include min-width(md) {
+  @each $side in $selected-sides {
+    #{$type}#{$side}: map.get($layout-gap-values, md) #{if($important, ' !important', '')};
+  }
+}
+
+@include min-width(lg) {
+  @each $side in $selected-sides {
+    #{$type}#{$side}: map.get($layout-gap-values, lg) #{if($important, ' !important', '')};
+  }
+}
+
+@include min-width(xxl) {
+  @each $side in $selected-sides {
+    #{$type}#{$side}: map.get($layout-gap-values, xxl) #{if($important, ' !important', '')};
+  }
+}
+}
+
+
+@mixin container($max: xxl, $additional-width: 0rem) {
+  & {
+    width: 100%;
+  }
+
+  $keys: map.keys($max-widths);
+
+  @each $label in $keys {
+    $value: map.get($max-widths, $label);
+    $max-value: map.get($max-widths, $max);
+
+    @if $label !=xs and $label !=xxs {
+      @include min-width($label) {
+
+        @if $max !=null {
+          @if $value >$max-value {
+            max-width: calc($max-value + $additional-width);
+          }
+
+          @else {
+            max-width: calc($value + $additional-width);
+          }
+        }
+
+        @else {
+          max-width: calc($value + $additional-width);
+        }
+      }
+    }
+  }
+}
