@@ -2,10 +2,10 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import '@/main.scss'
 
-import App from './App.vue'
+import Main from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+const app = createApp(Main)
 
 app.use(createPinia())
 app.use(router)

@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-accent: rgb(255, 210, 122);
+  --color-primary: rgb(255, 251, 244);
+  --color-secondary: rgb(59, 54, 73);
+  --color-spotify: #1db954;
+  --color-deezer: #a238ff;
+  --color-tidal: #000000;
+  --color-apple-music: #fa586a;
+}
