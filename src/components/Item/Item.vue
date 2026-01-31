@@ -8,10 +8,14 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="item p-2 flex gap-4 items-center rounded-t-3xl rounded-b-xl glass">
-    <img :src="props.imageSrc" :alt="props.title" class="w-16 h-16 rounded-full shadow-md" />
+  <div class="item h-20 p-2.5 flex gap-4 items-center rounded-xl first-of-type:rounded-t-4xl glass">
+    <img
+      :src="props.imageSrc"
+      :alt="props.title"
+      class="h-full aspect-square rounded-full shadow-md"
+    />
     <div class="flex flex-col w-full min-w-0">
-      <p class="flex-1 min-w-0 !font-medium text-lg text-primary truncate">
+      <p class="flex-1 min-w-0 font-medium! text-lg text-primary truncate">
         {{ props.title }}
       </p>
       <p class="font-base text-sm text-primary/60">{{ props.subtitle }}</p>

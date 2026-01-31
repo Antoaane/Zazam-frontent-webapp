@@ -13,30 +13,63 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
 
 <template>
   <Header />
-  <div class="w-full h-full grow shrink flex flex-col rounded-4xl glass">
+  <div class="grow shrink flex flex-col rounded-5xl glass">
     <keep-alive>
       <component :is="currentTab" />
     </keep-alive>
-    <div>
-      <nav>
-        <button @click="currentTab = QueueTab">
-          <ListEnd />
+    <div class="h-22 rounded-b-5xl border-t border-primary/50">
+      <nav class="w-full h-full p-2 flex">
+        <button
+          :class="{
+            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            glass: currentTab === QueueTab,
+          }"
+          @click="currentTab = QueueTab"
+        >
+          <ListEnd :size="28" />
         </button>
-        <button @click="currentTab = LikesTab">
-          <Heart />
+        <button
+          :class="{
+            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            glass: currentTab === LikesTab,
+          }"
+          @click="currentTab = LikesTab"
+        >
+          <Heart :size="28" />
         </button>
-        <button @click="currentTab = SearchTab">
-          <Search />
+        <button
+          :class="{
+            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            glass: currentTab === SearchTab,
+          }"
+          @click="currentTab = SearchTab"
+        >
+          <Search :size="28" />
         </button>
-        <button @click="currentTab = PlaylistsTab">
-          <LibraryBig />
+        <button
+          :class="{
+            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            glass: currentTab === PlaylistsTab,
+          }"
+          @click="currentTab = PlaylistsTab"
+        >
+          <LibraryBig :size="28" />
         </button>
       </nav>
     </div>
   </div>
 
-  <div class="flex-1 grow shrink">
+  <div class="shrink">
     <button></button>
     <Player />
   </div>
 </template>
+
+<style scoped lang="scss">
+@use '@/styles/variables/main-vars.scss' as *;
+button {
+  svg {
+    stroke: $primary;
+  }
+}
+</style>
