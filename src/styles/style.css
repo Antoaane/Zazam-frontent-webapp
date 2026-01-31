@@ -8,4 +8,23 @@
   --color-deezer: #a238ff;
   --color-tidal: #000000;
   --color-apple-music: #fa586a;
+
+  /* font  */
+  --font-base: 'Space Grotesk';
+}
+
+.glass {
+  @apply border-1 bg-primary/10 border-primary/50 backdrop-blur-3xl;
+}
+
+@font-face {
+  src: url('/fonts/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-family: 'Space Grotesk';
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+p {
+  font-family: 'Space Grotesk';
+  font-weight: 400;
 }

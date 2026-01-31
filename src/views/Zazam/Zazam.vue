@@ -13,14 +13,10 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
 
 <template>
   <Header />
-  <div
-    class="w-full h-full grow shrink rounded-4xl border-2 bg-primary/15 border-primary/25 backdrop-blur-3xl"
-  >
-    <div>
-      <keep-alive>
-        <component :is="currentTab" />
-      </keep-alive>
-    </div>
+  <div class="w-full h-full grow shrink flex flex-col rounded-4xl glass">
+    <keep-alive>
+      <component :is="currentTab" />
+    </keep-alive>
     <div>
       <nav>
         <button @click="currentTab = QueueTab">

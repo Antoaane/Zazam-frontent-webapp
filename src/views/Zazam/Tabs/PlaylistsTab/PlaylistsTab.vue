@@ -1,11 +1,16 @@
-<script lang="ts"></script>
+<script lang="ts" setup>
+import Item from '@/components/Item/Item.vue'
+</script>
 
 <template>
-  <h1 class="text-red-300">Playlists View</h1>
+  <div class="playlist-tab h-full p-1.5">
+    <Item
+      imageSrc="/images/test/pl-cover.png"
+      title="Daylist 26/03/2025 Daylist 26/03/2025"
+      subtitle="20 songs"
+      :draggable="false"
+    />
+  </div>
 </template>
 
-<style lang="scss">
-h1 {
-  font-size: 2rem;
-}
-</style>
+<style lang="scss"></style>

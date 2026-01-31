@@ -61,11 +61,11 @@ const route = useRoute()
 
   .main-container {
     height: 100%;
-    padding: var(--layout-gap-sm);
+    padding: 0.75rem;
 
     display: flex;
     flex-direction: column;
-    gap: var(--layout-gap);
+    gap: 1rem;
   }
 }
 </style>
