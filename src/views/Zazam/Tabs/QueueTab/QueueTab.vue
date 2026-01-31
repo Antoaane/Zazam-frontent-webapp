@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 
 <template>
-  <h1>Queue</h1>
+  <div class="queue-tab"></div>
 </template>

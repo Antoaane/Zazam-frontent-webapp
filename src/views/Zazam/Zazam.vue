@@ -5,7 +5,7 @@ import QueueTab from '@/views/Zazam/Tabs/QueueTab/QueueTab.vue'
 import SearchTab from '@/views/Zazam/Tabs/SearchTab/SearchTab.vue'
 import Header from '@/views/Zazam/Header/Header.vue'
 import Player from '@/views/Zazam/Player/Player.vue'
-import { Heart, LibraryBig, ListEnd, Search } from 'lucide-vue-next'
+import { Heart, LibraryBig, ListEnd, Search, UserRoundPlus } from 'lucide-vue-next'
 import { shallowRef, type Component } from 'vue'
 
 const currentTab = shallowRef<Component>(PlaylistsTab)
@@ -21,7 +21,7 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
       <nav class="w-full h-full p-2 flex">
         <button
           :class="{
-            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            'nav-item flex-1 h-full flex items-center justify-center rounded-full': true,
             glass: currentTab === QueueTab,
           }"
           @click="currentTab = QueueTab"
@@ -30,7 +30,7 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
         </button>
         <button
           :class="{
-            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            'nav-item flex-1 h-full flex items-center justify-center rounded-full': true,
             glass: currentTab === LikesTab,
           }"
           @click="currentTab = LikesTab"
@@ -39,7 +39,7 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
         </button>
         <button
           :class="{
-            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            'nav-item flex-1 h-full flex items-center justify-center rounded-full': true,
             glass: currentTab === SearchTab,
           }"
           @click="currentTab = SearchTab"
@@ -48,7 +48,7 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
         </button>
         <button
           :class="{
-            'flex-1 h-full flex items-center justify-center rounded-full': true,
+            'nav-item flex-1 h-full flex items-center justify-center rounded-full': true,
             glass: currentTab === PlaylistsTab,
           }"
           @click="currentTab = PlaylistsTab"
@@ -60,16 +60,28 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
   </div>
 
   <div class="shrink">
-    <button></button>
-    <Player />
+    <div class="h-20 flex gap-3">
+      <button
+        class="add-user h-full aspect-square flex items-center justify-center bg-primary rounded-full"
+      >
+        <UserRoundPlus :size="28" />
+      </button>
+      <Player />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 @use '@/styles/variables/main-vars.scss' as *;
-button {
+.nav-item {
   svg {
     stroke: $primary;
+  }
+}
+
+.add-user {
+  svg {
+    stroke: $secondary;
   }
 }
 </style>
