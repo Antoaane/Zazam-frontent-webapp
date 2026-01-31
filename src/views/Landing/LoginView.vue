@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const spotifyClientId =
   import.meta.env.VITE_SPOTIFY_CLIENT_ID ?? import.meta.env.SPOTIFY_CLIENT_ID ?? ''
@@ -8,6 +8,7 @@ const envRedirectUri =
   import.meta.env.VITE_SPOTIFY_REDIRECT_URI ?? import.meta.env.VITE_REDIRECT_URI ?? ''
 const redirectUri = envRedirectUri || (typeof window !== 'undefined' ? window.location.origin : '')
 const forceDialog = import.meta.env.VITE_SPOTIFY_SHOW_DIALOG === 'true'
+const CODE_VERIFIER_KEY = 'spotify_code_verifier'
 const scopes: string[] = [
   'streaming',
   'user-read-email',
@@ -20,15 +21,46 @@ const scopes: string[] = [
   'playlist-modify-public',
 ]
 
-const spotifyAuthUrl = computed(() => {
+const spotifyAuthUrl = ref('')
+const isConfigured = computed(() => Boolean(spotifyClientId))
+
+const base64UrlEncode = (buffer: ArrayBuffer): string => {
+  const bytes = new Uint8Array(buffer)
+  let binary = ''
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte)
+  })
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
+}
+
+const generateCodeVerifier = (length: number): string => {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
+  const values = new Uint8Array(length)
+  crypto.getRandomValues(values)
+  return Array.from(values, (value) => charset[value % charset.length]).join('')
+}
+
+const generateCodeChallenge = async (verifier: string): Promise<string> => {
+  const data = new TextEncoder().encode(verifier)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  return base64UrlEncode(digest)
+}
+
+onMounted(async () => {
   if (!spotifyClientId || !redirectUri) {
-    return ''
+    return
   }
+
+  const verifier = generateCodeVerifier(64)
+  sessionStorage.setItem(CODE_VERIFIER_KEY, verifier)
+  const challenge = await generateCodeChallenge(verifier)
 
   const params = new URLSearchParams({
     client_id: spotifyClientId,
     response_type: 'code',
     redirect_uri: redirectUri,
+    code_challenge_method: 'S256',
+    code_challenge: challenge,
   })
 
   if (scopes.length > 0) {
@@ -38,10 +70,9 @@ const spotifyAuthUrl = computed(() => {
     params.set('show_dialog', 'true')
   }
 
-  return `https://accounts.spotify.com/authorize?${params.toString()}`
+  spotifyAuthUrl.value = `https://accounts.spotify.com/authorize?${params.toString()}`
+  console.log('[Login] Spotify auth URL ready', { redirectUri })
 })
-
-const isConfigured = computed(() => Boolean(spotifyClientId))
 </script>
 
 <template>

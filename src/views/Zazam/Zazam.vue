@@ -13,7 +13,7 @@ const currentTab = shallowRef<Component>(PlaylistsTab)
 
 <template>
   <Header />
-  <div class="grow shrink flex flex-col rounded-5xl glass">
+  <div class="min-h-0 grow shrink flex flex-col rounded-5xl glass">
     <keep-alive>
       <component :is="currentTab" />
     </keep-alive>
