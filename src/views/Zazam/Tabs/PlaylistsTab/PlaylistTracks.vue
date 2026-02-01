@@ -15,6 +15,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'back'): void
   (event: 'load-more'): void
+  (event: 'play-track', track: UserTrack): void
 }>()
 
 const listRef = ref<HTMLDivElement | null>(null)
@@ -53,18 +54,15 @@ watch(
     }
   },
 )
+
+const handleTrackClick = (track: UserTrack) => {
+  emit('play-track', track)
+}
 </script>
 
 <template>
   <div class="playlist-tracks-tab">
-    <div class="flex items-center gap-3">
-      <button
-        class="glass rounded-full w-10 h-10 flex items-center justify-center"
-        type="button"
-        @click="emit('back')"
-      >
-        <ChevronLeft :size="18" />
-      </button>
+    <div class="px-2 py-1 flex justify-between items-center gap-3">
       <div v-if="playlist" class="flex items-center gap-3 min-w-0">
         <img
           :src="playlist.coverUrl"
@@ -77,6 +75,13 @@ watch(
         </div>
       </div>
       <p v-else class="text-primary/60 text-sm">Select a playlist to see tracks.</p>
+      <button
+        class="glass rounded-full w-10 h-10 flex items-center justify-center"
+        type="button"
+        @click="emit('back')"
+      >
+        <ChevronLeft :size="24" />
+      </button>
     </div>
 
     <div ref="listRef" class="flex-1 overflow-y-auto flex flex-col gap-2 pr-1">
@@ -87,8 +92,12 @@ watch(
         :title="track.title"
         :subtitle="track.subtitle"
         :draggable="false"
+        @click="handleTrackClick(track)"
       />
-      <p v-if="!isLoading && tracks.length === 0 && playlist && !error" class="text-xs text-primary/60 text-center py-6">
+      <p
+        v-if="!isLoading && tracks.length === 0 && playlist && !error"
+        class="text-xs text-primary/60 text-center py-6"
+      >
         No tracks found.
       </p>
       <div v-if="error" class="text-xs text-primary/70 glass rounded-xl px-3 py-2">
@@ -100,4 +109,10 @@ watch(
   </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+@use '@/styles/variables/main-vars.scss' as *;
+
+.lucide-chevron-left {
+  stroke: $primary;
+}
+</style>

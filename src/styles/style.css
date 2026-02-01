@@ -22,7 +22,7 @@
 }
 
 [class$='-tab'] {
-  @apply h-full p-2 flex flex-col gap-2;
+  @apply h-full p-2 pb-0 flex flex-col gap-2;
 }
 
 @font-face {

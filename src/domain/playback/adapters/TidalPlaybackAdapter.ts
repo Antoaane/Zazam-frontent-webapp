@@ -34,6 +34,7 @@ export const tidalPlaybackAdapter: PlaybackAdapter = {
   play: notImplemented,
   pause: notImplemented,
   togglePlay: notImplemented,
+  playTrack: notImplemented,
   seek: notImplemented,
   onStateChange() {
     return () => undefined

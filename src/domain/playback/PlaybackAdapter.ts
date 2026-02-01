@@ -32,6 +32,7 @@ export interface PlaybackAdapter {
   play(): Promise<void>
   pause(): Promise<void>
   togglePlay(): Promise<void>
+  playTrack(trackUri: string): Promise<void>
   seek(positionMs: number): Promise<void>
   onStateChange(listener: PlaybackStateListener): () => void
 }

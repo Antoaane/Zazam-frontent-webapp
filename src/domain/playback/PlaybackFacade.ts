@@ -72,6 +72,10 @@ export class PlaybackFacade {
     await this.getAdapter().togglePlay()
   }
 
+  async playTrack(trackUri: string): Promise<void> {
+    await this.getAdapter().playTrack(trackUri)
+  }
+
   async seek(positionMs: number): Promise<void> {
     await this.getAdapter().seek(positionMs)
   }

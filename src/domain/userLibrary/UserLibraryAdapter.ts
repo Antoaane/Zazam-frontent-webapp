@@ -15,6 +15,7 @@ export interface UserTrack {
   title: string
   subtitle: string
   coverUrl: string
+  uri?: string
   durationMs?: number
 }
 

@@ -38,8 +38,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex-1 flex gap-3">
-    <div class="flex-1 h-full p-2 flex rounded-full glass">
+  <div class="flex-1 min-w-0 flex gap-3">
+    <div class="flex-1 h-full min-w-0 p-2 flex rounded-full glass">
       <img
         :src="coverUrl"
         alt="song cover"

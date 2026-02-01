@@ -131,6 +131,7 @@ const mapTrack = (item: SpotifyPlaylistTrackItem): UserTrack | null => {
     title: item.track.name,
     subtitle: subtitleParts.join(' - ') || 'Unknown artist',
     coverUrl: item.track.album?.images?.[0]?.url ?? DEFAULT_COVER,
+    uri: item.track.uri,
     durationMs: item.track.duration_ms,
   }
 }

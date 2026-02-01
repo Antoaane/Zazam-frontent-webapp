@@ -1,33 +1,50 @@
 <script lang="ts" setup>
 import Item from '@/components/Item/Item.vue'
+import { storeToRefs } from 'pinia'
+import { useQueueStore } from '@/domain/queue/QueueStore'
 
-const queueTracks = [
-  {
-    coverSrc: '/images/test/album1.jpg',
-    title: 'Song Title 1',
-    subTitle: 'Artist Name 1',
-  },
-  {
-    coverSrc: '/images/test/album2.jpg',
-    title: 'Song Title 2',
-    subTitle: 'Artist Name 2',
-  },
-  {
-    coverSrc: '/images/test/album3.jpg',
-    title: 'Song Title 3',
-    subTitle: 'Artist Name 3',
-  },
-]
+const queueStore = useQueueStore()
+const { items, currentIndex } = storeToRefs(queueStore)
 </script>
 
 <template>
-  <div class="queue-tab">
-    <Item
-      v-for="track in queueTracks"
-      :imageSrc="track.coverSrc"
-      :title="track.title"
-      :subtitle="track.subTitle"
-      :draggable="true"
-    />
+  <div class="min-h-0 queue-tab">
+    <div class="flex-1 overflow-hidden overflow-y-scroll rounded-t-4xl">
+      <div class="flex flex-col gap-2">
+        <p v-if="items.length === 0" class="text-sm text-primary/60 text-center py-6">
+          No tracks in queue.
+        </p>
+        <Item
+          v-for="(track, index) in items"
+          :key="track.id"
+          :imageSrc="track.coverUrl"
+          :title="track.title"
+          :subtitle="track.artist"
+          :draggable="true"
+          :isFirst="index === 0"
+          :class="{ 'opacity-60': index < currentIndex }"
+        />
+      </div>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+@use '@/styles/variables/main-vars.scss' as *;
+
+.queue-tab {
+  .item:first-of-type {
+    border: 1px $primary solid !important;
+    backdrop-filter: none !important;
+    background-color: $primary !important;
+
+    .title {
+      color: $secondary !important;
+    }
+
+    .subtitle {
+      color: rgba($secondary, 0.6) !important;
+    }
+  }
+}
+</style>

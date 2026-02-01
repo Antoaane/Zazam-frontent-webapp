@@ -3,7 +3,8 @@ import { computed, onMounted, ref } from 'vue'
 import PlaylistList from '@/views/Zazam/Tabs/PlaylistsTab/PlaylistList.vue'
 import PlaylistTracks from '@/views/Zazam/Tabs/PlaylistsTab/PlaylistTracks.vue'
 import { userLibraryFacade } from '@/domain/userLibrary/UserLibraryFacade'
-import type { UserPlaylist } from '@/domain/userLibrary/UserLibraryAdapter'
+import { queueFacade } from '@/domain/queue/QueueFacade'
+import type { UserPlaylist, UserTrack } from '@/domain/userLibrary/UserLibraryAdapter'
 
 const viewMode = ref<'list' | 'detail'>('list')
 const playlistsState = ref(userLibraryFacade.getPlaylistsState())
@@ -74,6 +75,14 @@ const handleBackToList = () => {
   viewMode.value = 'list'
 }
 
+const handlePlayTrack = async (track: UserTrack) => {
+  if (!selectedPlaylistId.value) {
+    console.log('[PlaylistsTab] Missing playlist selection for queue')
+    return
+  }
+  await queueFacade.replaceQueueFromPlaylist(selectedPlaylistId.value, track.uri ?? track.id)
+}
+
 onMounted(async () => {
   console.log('[PlaylistsTab] Mounted')
   refreshPlaylistsState()
@@ -104,6 +113,7 @@ onMounted(async () => {
       :error="tracksState?.error ?? null"
       @back="handleBackToList"
       @load-more="loadMoreTracks"
+      @play-track="handlePlayTrack"
     />
   </div>
 </template>

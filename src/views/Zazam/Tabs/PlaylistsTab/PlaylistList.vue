@@ -56,27 +56,31 @@ const handleSelect = (playlist: UserPlaylist) => {
 
 <template>
   <div class="playlist-list-tab">
-    <div ref="listRef" class="flex-1 overflow-y-auto flex flex-col gap-2">
-      <Item
-        v-for="playlist in playlists"
-        :key="playlist.id"
-        :imageSrc="playlist.coverUrl"
-        :title="playlist.title"
-        :subtitle="playlist.subtitle"
-        :draggable="false"
-        @click="handleSelect(playlist)"
-      />
-      <p
-        v-if="!isLoading && playlists.length === 0 && !error"
-        class="text-sm text-primary/60 text-center py-6"
-      >
-        No playlists found.
-      </p>
-      <div v-if="error" class="text-xs text-primary/70 glass rounded-xl px-3 py-2">
-        {{ error }}
+    <div ref="listRef" class="flex-1 overflow-hidden overflow-y-scroll rounded-t-4xl">
+      <div class="flex flex-col gap-2">
+        <Item
+          v-for="playlist in playlists"
+          :key="playlist.id"
+          :imageSrc="playlist.coverUrl"
+          :title="playlist.title"
+          :subtitle="playlist.subtitle"
+          :draggable="false"
+          @click="handleSelect(playlist)"
+        />
+        <p
+          v-if="!isLoading && playlists.length === 0 && !error"
+          class="text-sm text-primary/60 text-center py-6"
+        >
+          No playlists found.
+        </p>
+        <div v-if="error" class="text-xs text-primary/70 glass rounded-xl px-3 py-2">
+          {{ error }}
+        </div>
+        <div ref="sentinelRef" class="h-6"></div>
+        <p v-if="isLoading" class="text-xs text-primary/60 text-center py-3">
+          Loading playlists...
+        </p>
       </div>
-      <div ref="sentinelRef" class="h-6"></div>
-      <p v-if="isLoading" class="text-xs text-primary/60 text-center py-3">Loading playlists...</p>
     </div>
   </div>
 </template>

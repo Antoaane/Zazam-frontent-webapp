@@ -130,6 +130,28 @@ const transferPlayback = async (deviceId: string): Promise<void> => {
   })
 }
 
+const playSpotifyTrack = async (trackUri: string, deviceId: string | null): Promise<void> => {
+  const token = getSpotifyAccessToken()
+  if (!token) {
+    throw new Error('Missing Spotify access token.')
+  }
+  if (!deviceId) {
+    throw new Error('Spotify device not ready.')
+  }
+
+  const url = new URL(buildSpotifyUrl('/me/player/play'))
+  url.searchParams.set('device_id', deviceId)
+
+  await fetch(url.toString(), {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uris: [trackUri] }),
+  })
+}
+
 class SpotifyPlaybackAdapter implements PlaybackAdapter {
   platform = 'spotify' as const
   capabilities = capabilities
@@ -266,6 +288,16 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
       throw new Error('Spotify player not ready.')
     }
     await this.player.togglePlay()
+  }
+
+  async playTrack(trackUri: string): Promise<void> {
+    if (!trackUri) {
+      throw new Error('Missing track URI.')
+    }
+    if (!this.player) {
+      throw new Error('Spotify player not ready.')
+    }
+    await playSpotifyTrack(trackUri, this.state.deviceId)
   }
 
   async seek(positionMs: number): Promise<void> {
