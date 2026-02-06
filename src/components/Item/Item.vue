@@ -17,18 +17,20 @@ const props = defineProps<{
 
 <template>
   <button
-    class="item h-20 p-2.5 flex gap-4 items-center justify-start rounded-xl first-of-type:rounded-t-4xl glass"
+    class="item h-19 p-2 flex gap-4 items-center justify-start rounded-xl first-of-type:rounded-t-4xl glass"
   >
     <img
       :src="props.imageSrc"
       :alt="props.title"
-      class="h-full aspect-square rounded-full shadow-md"
+      class="h-full aspect-square rounded-md shadow-md"
     />
     <div class="flex flex-col w-full min-w-0">
       <p class="title flex-1 min-w-0 font-medium! text-lg text-primary truncate text-left">
         {{ props.title }}
       </p>
-      <p class="subtitle font-base text-sm text-primary/60 text-left">{{ props.subtitle }}</p>
+      <p class="subtitle font-base text-sm text-primary/60 text-left truncate">
+        {{ props.subtitle }}
+      </p>
     </div>
     <button
       v-if="props.draggable && !props.isFirst"
@@ -53,6 +55,12 @@ const props = defineProps<{
   .play {
     stroke: $secondary;
     display: block;
+  }
+
+  &:first-of-type {
+    img {
+      border-top-left-radius: 1.5rem;
+    }
   }
 }
 </style>

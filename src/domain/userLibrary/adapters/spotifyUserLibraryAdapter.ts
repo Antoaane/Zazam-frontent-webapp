@@ -122,14 +122,11 @@ const mapTrack = (item: SpotifyPlaylistTrackItem): UserTrack | null => {
 
   const artists = item.track.artists?.map((artist) => artist.name).filter(Boolean) ?? []
   const subtitleParts = artists.length ? [artists.join(', ')] : []
-  if (item.track.album?.name) {
-    subtitleParts.push(item.track.album.name)
-  }
 
   return {
     id: item.track.id ?? item.track.uri ?? item.track.name,
     title: item.track.name,
-    subtitle: subtitleParts.join(' - ') || 'Unknown artist',
+    subtitle: subtitleParts.join(', ') || 'Unknown artist',
     coverUrl: item.track.album?.images?.[0]?.url ?? DEFAULT_COVER,
     uri: item.track.uri,
     durationMs: item.track.duration_ms,

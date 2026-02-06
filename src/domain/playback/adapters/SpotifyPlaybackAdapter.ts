@@ -159,6 +159,7 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
   private state: PlaybackState = { ...DEFAULT_STATE }
   private listeners = new Set<PlaybackStateListener>()
   private isConnecting = false
+  private pollingTimer: number | null = null
 
   getState(): PlaybackState {
     return this.state
@@ -217,14 +218,7 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
         if (!playerState) {
           return
         }
-        this.state = {
-          ...this.state,
-          isPlaying: !playerState.paused,
-          positionMs: playerState.position,
-          durationMs: playerState.duration,
-          track: this.mapTrack(playerState),
-        }
-        this.notify()
+        this.applyPlayerState(playerState)
       })
 
       this.player.addListener('initialization_error', ({ message }: { message: string }) => {
@@ -245,14 +239,11 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
 
       const initialState = await this.player.getCurrentState()
       if (initialState) {
-        this.state = {
-          ...this.state,
-          isPlaying: !initialState.paused,
-          positionMs: initialState.position,
-          durationMs: initialState.duration,
-          track: this.mapTrack(initialState),
-        }
-        this.notify()
+        this.applyPlayerState(initialState)
+      }
+
+      if (connected) {
+        this.startPolling()
       }
     } finally {
       this.isConnecting = false
@@ -263,6 +254,7 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
     if (!this.player) {
       return
     }
+    this.stopPolling()
     this.player.disconnect()
     this.player = null
     this.state = { ...DEFAULT_STATE }
@@ -319,6 +311,39 @@ class SpotifyPlaybackAdapter implements PlaybackAdapter {
       album: track.album?.name,
       coverUrl: track.album?.images?.[0]?.url ?? DEFAULT_COVER,
       durationMs: playerState.duration,
+    }
+  }
+
+  private applyPlayerState(playerState: SpotifyPlayerState): void {
+    this.state = {
+      ...this.state,
+      isPlaying: !playerState.paused,
+      positionMs: playerState.position,
+      durationMs: playerState.duration,
+      track: this.mapTrack(playerState),
+    }
+    this.notify()
+  }
+
+  private startPolling(): void {
+    if (this.pollingTimer) {
+      return
+    }
+    this.pollingTimer = window.setInterval(async () => {
+      if (!this.player) {
+        return
+      }
+      const current = await this.player.getCurrentState()
+      if (current) {
+        this.applyPlayerState(current)
+      }
+    }, 1000)
+  }
+
+  private stopPolling(): void {
+    if (this.pollingTimer) {
+      window.clearInterval(this.pollingTimer)
+      this.pollingTimer = null
     }
   }
 

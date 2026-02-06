@@ -115,6 +115,7 @@ export class UserLibraryFacade {
         cursor: state.cursor,
       })
       const nextState = this.mergePage(state, page)
+      nextState.isLoading = false
       this.tracksState.set(playlistId, nextState)
       console.log('[UserLibrary] Tracks page loaded', {
         playlistId,
@@ -127,10 +128,33 @@ export class UserLibraryFacade {
       state.error = toErrorMessage(error)
       console.log('[UserLibrary] Tracks page error', { playlistId, error: state.error })
     } finally {
-      state.isLoading = false
+      const current = this.tracksState.get(playlistId)
+      if (current) {
+        current.isLoading = false
+      }
     }
 
     return this.ensureTracksState(playlistId)
+  }
+
+  async loadAllPlaylistTracks(playlistId: string): Promise<UserTrack[]> {
+    let state = this.ensureTracksState(playlistId)
+    let safety = 0
+
+    while (state.hasMore) {
+      const before = state.items.length
+      state = await this.loadNextPlaylistTracksPage(playlistId)
+      if (state.items.length === before) {
+        break
+      }
+      safety += 1
+      if (safety > 200) {
+        console.log('[UserLibrary] loadAllPlaylistTracks aborted (too many pages)')
+        break
+      }
+    }
+
+    return state.items
   }
 
   private mergePage<T>(state: UserLibraryPageState<T>, page: UserLibraryPage<T>): UserLibraryPageState<T> {

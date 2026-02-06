@@ -90,22 +90,13 @@ class QueueFacade {
 
     const currentBuildId = ++this.buildId
 
-    if (tracksState.hasMore) {
-      let previousLength = tracks.length
-
-      while (true) {
-        const nextState = await userLibraryFacade.loadNextPlaylistTracksPage(playlistId)
-        if (currentBuildId !== this.buildId) {
-          return
-        }
-        const newItems = nextState.items.slice(previousLength).map(toQueueTrack)
-        store.appendTracks(newItems)
-        previousLength = nextState.items.length
-
-        if (!nextState.hasMore) {
-          break
-        }
-      }
+    const fullTracks = await userLibraryFacade.loadAllPlaylistTracks(playlistId)
+    if (currentBuildId !== this.buildId) {
+      return
+    }
+    const fullStartIndex = findTrackIndex(fullTracks, selectedTrackId)
+    if (fullStartIndex >= 0) {
+      store.replaceQueue(fullTracks.slice(fullStartIndex).map(toQueueTrack), 0)
     }
   }
 
@@ -136,7 +127,7 @@ class QueueFacade {
       state.durationMs > 0 && state.positionMs >= state.durationMs - END_THRESHOLD_MS
     const isCurrentTrack = matchIndex === currentIndex
 
-    if (!state.isPlaying && isNearEnd && isCurrentTrack) {
+    if (isNearEnd && isCurrentTrack) {
       if (this.lastEndedTrackId === playbackTrackId) {
         return
       }
@@ -147,6 +138,8 @@ class QueueFacade {
         playbackFacade.playTrack(nextTrack.uri).catch((error) => {
           console.log('[Queue] Play next track failed', error)
         })
+      } else if (nextTrack) {
+        console.log('[Queue] Next track missing uri, cannot play', nextTrack)
       }
     }
   }

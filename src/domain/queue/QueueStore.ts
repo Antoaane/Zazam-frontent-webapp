@@ -91,10 +91,27 @@ export const useQueueStore = defineStore('queue', () => {
       console.log('[Queue] Advance ignored (read-only)')
       return
     }
-    if (currentIndex.value + 1 < items.value.length) {
-      currentIndex.value += 1
-      updatedAt.value = Date.now()
+    if (items.value.length === 0) {
+      return
     }
+
+    const nextIndex = currentIndex.value + 1
+    if (nextIndex >= items.value.length) {
+      items.value = []
+      currentIndex.value = 0
+      lastPlayedTrackId.value = null
+      lastPlayedPositionMs.value = 0
+      lastPlayedAt.value = Date.now()
+      updatedAt.value = Date.now()
+      return
+    }
+
+    items.value = items.value.slice(nextIndex)
+    currentIndex.value = 0
+    updatedAt.value = Date.now()
+    lastPlayedTrackId.value = items.value[0]?.id ?? null
+    lastPlayedPositionMs.value = 0
+    lastPlayedAt.value = Date.now()
   }
 
   const setCurrentIndex = (index: number) => {

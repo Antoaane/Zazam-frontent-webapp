@@ -18,7 +18,7 @@
 }
 
 .glass {
-  @apply border-1 bg-primary/10 border-primary/50 backdrop-blur-3xl;
+  @apply border-1 bg-primary/15 border-primary/50 backdrop-blur-3xl;
 }
 
 [class$='-tab'] {

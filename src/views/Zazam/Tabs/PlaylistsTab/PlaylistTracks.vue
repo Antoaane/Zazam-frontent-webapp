@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import Item from '@/components/Item/Item.vue'
 import type { UserPlaylist, UserTrack } from '@/domain/userLibrary/UserLibraryAdapter'
@@ -43,7 +43,9 @@ const setupObserver = () => {
   observer.observe(sentinelRef.value)
 }
 
-onMounted(setupObserver)
+onMounted(() => {
+  nextTick(setupObserver)
+})
 onBeforeUnmount(() => observer?.disconnect())
 
 watch(
@@ -52,6 +54,14 @@ watch(
     if (listRef.value) {
       listRef.value.scrollTop = 0
     }
+    nextTick(setupObserver)
+  },
+)
+
+watch(
+  () => props.tracks.length,
+  () => {
+    nextTick(setupObserver)
   },
 )
 
@@ -76,7 +86,7 @@ const handleTrackClick = (track: UserTrack) => {
       </div>
       <p v-else class="text-primary/60 text-sm">Select a playlist to see tracks.</p>
       <button
-        class="glass rounded-full w-10 h-10 flex items-center justify-center"
+        class="glass rounded-full h-10 aspect-square flex items-center justify-center"
         type="button"
         @click="emit('back')"
       >
@@ -84,7 +94,7 @@ const handleTrackClick = (track: UserTrack) => {
       </button>
     </div>
 
-    <div ref="listRef" class="flex-1 overflow-y-auto flex flex-col gap-2 pr-1">
+    <div ref="listRef" class="flex-1 overflow-y-auto flex flex-col gap-2 rounded-t-xl">
       <Item
         v-for="track in tracks"
         :key="track.id"

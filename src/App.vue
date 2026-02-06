@@ -1,12 +1,33 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute, RouterView } from 'vue-router'
+import { resolveUserLibraryPlatform } from '@/domain/userLibrary/UserLibraryResolver'
 
 const route = useRoute()
+
+const accentColor = computed(() => {
+  if (route.name === 'login' || route.name === 'login-callback') {
+    return 'var(--color-accent)'
+  }
+
+  const platform = resolveUserLibraryPlatform()
+  switch (platform) {
+    case 'spotify':
+      return 'var(--color-spotify)'
+    case 'deezer':
+      return 'var(--color-deezer)'
+    case 'tidal':
+      return 'var(--color-tidal)'
+    case 'apple_music':
+      return 'var(--color-apple-music)'
+    default:
+      return 'var(--color-accent)'
+  }
+})
 </script>
 
 <template>
-  <div class="background">
+  <div class="background" :style="{ '--app-accent': accentColor }">
     <svg class="noise" viewBox="0 0 500 500" preserveAspectRatio="none">
       <filter id="noiseFilter">
         <feTurbulence baseFrequency="3" numOctaves="4" result="noise" type="fractalNoise" />
@@ -27,8 +48,6 @@ const route = useRoute()
 </template>
 
 <style lang="scss">
-@use '@/styles/variables/main-vars.scss' as *;
-
 #app {
   position: relative;
   width: 100vw;
@@ -43,7 +62,12 @@ const route = useRoute()
     z-index: -1;
     inset: 0;
 
-    background: radial-gradient(160% 125% at 150% -20%, $accent 0%, $secondary 100%), $secondary;
+    background: radial-gradient(
+        160% 125% at 150% -20%,
+        var(--app-accent, var(--color-accent)) 0%,
+        var(--color-secondary) 100%
+      ),
+      var(--color-secondary);
 
     .noise {
       position: absolute;

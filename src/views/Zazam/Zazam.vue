@@ -6,9 +6,14 @@ import SearchTab from '@/views/Zazam/Tabs/SearchTab/SearchTab.vue'
 import Header from '@/views/Zazam/Header/Header.vue'
 import Player from '@/views/Zazam/Player/Player.vue'
 import { Heart, LibraryBig, ListEnd, Search, UserRoundPlus } from 'lucide-vue-next'
-import { shallowRef, type Component } from 'vue'
+import { onMounted, shallowRef, type Component } from 'vue'
+import { queueFacade } from '@/domain/queue/QueueFacade'
 
 const currentTab = shallowRef<Component>(PlaylistsTab)
+
+onMounted(() => {
+  queueFacade.initialize()
+})
 </script>
 
 <template>
