@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-accent: rgb(255, 210, 122);
+  --color-primary: rgb(255, 251, 244);
+  --color-secondary: rgb(59, 54, 73);
+  --color-spotify: #1db954;
+  --color-deezer: #a238ff;
+  --color-tidal: #000000;
+  --color-apple-music: #fa586a;
+
+  /* font  */
+  --font-base: 'Space Grotesk';
+  --font-title: 'Iquost';
+
+  /* border-radius */
+  --radius-5xl: 2.5rem;
+}
+
+.glass {
+  @apply border bg-primary/15 border-primary/50 backdrop-blur-3xl;
+}
+
+[class$='-tab'] {
+  @apply h-full p-2 pb-0 flex flex-col gap-2;
+}
+
+@font-face {
+  src: url('/fonts/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-family: 'Space Grotesk';
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  src: url('/fonts/iquost.otf') format('opentype');
+  font-family: 'Iquost';
+  font-weight: 400;
+  font-style: normal;
+}
+
+p {
+  font-family: 'Space Grotesk';
+  font-weight: 400;
+}
