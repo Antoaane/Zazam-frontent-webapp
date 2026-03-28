@@ -6,10 +6,60 @@ import SearchTab from '@/views/Zazam/Tabs/SearchTab/SearchTab.vue'
 import Header from '@/views/Zazam/Header/Header.vue'
 import Player from '@/views/Zazam/Player/Player.vue'
 import { Heart, LibraryBig, ListEnd, Search, UserRoundPlus } from 'lucide-vue-next'
-import { onMounted, shallowRef, type Component } from 'vue'
+import { computed, onMounted, shallowRef, type Component } from 'vue'
 import { queueFacade } from '@/domain/queue/QueueFacade'
+import { roomFacade } from '@/domain/room/RoomFacade'
+import { useRoomStore } from '@/domain/room/RoomStore'
 
 const currentTab = shallowRef<Component>(PlaylistsTab)
+const roomStore = useRoomStore()
+const isRoomActionBusy = computed(() => roomStore.connectionState === 'connecting')
+
+const roomButtonTitle = computed(() => {
+  if (roomStore.roomId && roomStore.role) {
+    return `Room ${roomStore.roomId} (${roomStore.role}) - cliquer pour quitter`
+  }
+
+  return 'Créer ou rejoindre une room'
+})
+
+const handleRoomAction = async () => {
+  if (isRoomActionBusy.value) {
+    return
+  }
+
+  if (roomStore.roomId) {
+    const shouldLeave = window.confirm(`Quitter la room ${roomStore.roomId} ?`)
+    if (shouldLeave) {
+      roomFacade.leaveRoom()
+    }
+    return
+  }
+
+  const shouldCreateRoom = window.confirm(
+    'OK: créer une room\nAnnuler: rejoindre une room existante',
+  )
+
+  if (shouldCreateRoom) {
+    try {
+      await roomFacade.createRoom()
+    } catch (error) {
+      console.log('[Room] Create room failed', error)
+    }
+    return
+  }
+
+  const roomId = window.prompt('Entrez un roomId')
+  if (!roomId) {
+    return
+  }
+
+  try {
+    await roomFacade.joinRoom(roomId)
+  } catch (error) {
+    console.log('[Room] Join room failed', error)
+  }
+}
 
 onMounted(() => {
   queueFacade.initialize()
@@ -68,6 +118,10 @@ onMounted(() => {
     <div class="h-20 flex gap-3">
       <button
         class="add-user h-full aspect-square flex items-center justify-center bg-primary rounded-full"
+        type="button"
+        :disabled="isRoomActionBusy"
+        :title="roomButtonTitle"
+        @click="handleRoomAction"
       >
         <UserRoundPlus :size="28" />
       </button>
@@ -87,6 +141,11 @@ onMounted(() => {
 .add-user {
   svg {
     stroke: $secondary;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 </style>

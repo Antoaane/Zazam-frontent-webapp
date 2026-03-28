@@ -19,7 +19,14 @@ export default defineConfig({
     https: {
       key: fs.readFileSync(fileURLToPath(new URL('./certs/localhost-key.pem', import.meta.url))),
       cert: fs.readFileSync(fileURLToPath(new URL('./certs/localhost.pem', import.meta.url))),
-    }
+    },
+    proxy: {
+      '/room-signal': {
+        target: 'ws://127.0.0.1:8080',
+        ws: true,
+        changeOrigin: true,
+      },
+    },
   },
   resolve: {
     alias: {

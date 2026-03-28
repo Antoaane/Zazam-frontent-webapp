@@ -16,6 +16,11 @@ interface ImportMetaEnv {
   readonly VITE_LIBRARY_PLATFORM?: string
   readonly VITE_PLAYBACK_PLATFORM?: string
   readonly VITE_PLAYER_PLATFORM?: string
+  readonly VITE_ROOM_SIGNALING_URL?: string
+  readonly VITE_ROOM_STUN_URL?: string
+  readonly VITE_ROOM_TURN_URL?: string
+  readonly VITE_ROOM_TURN_USERNAME?: string
+  readonly VITE_ROOM_TURN_CREDENTIAL?: string
 }
 
 interface ImportMeta {
